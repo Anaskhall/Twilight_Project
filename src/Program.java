@@ -9,6 +9,8 @@ public class Program {
     public static Socket socket = null;
     public static OutputStream out = null;
 
+
+
     public static void main (String[] args) throws Exception {
         int port = 6666; //donner une valeur correcte
         String host = "123.123.3.5"; //donner une valeur correcte
