@@ -34,8 +34,7 @@ public class Map {
     public void initialize(int x, int y, int humans, int vampires, int werewolves){
         if (humans>0){
             Human human = new Human(x,y);
-            int index = this.humans.indexOf(human);
-            System.out.println(index);
+            int index = getHumanBySquare(x,y);
             this.humans.get(index).setNumber(humans);
         }
         if (vampires >0){
@@ -61,30 +60,87 @@ public class Map {
     }
 
     public void update(int x, int y, int humans, int vampires, int werewolves){
-        if (humans>0){
-            Human human = new Human(x,y);
-            int index = this.humans.indexOf(human);
-            this.humans.get(index).setNumber(humans);
+        updateHuman(x, y, humans);
+        if (this.monstersType.equals("Vampire")){
+            updateMonster(x, y, vampires);
+            updateArmy(x, y, werewolves);
         }
-        if (vampires >0){
-            this.army.get(0).setNumber(vampires);
-
-        }
-        if (werewolves >0){
-            this.army.get(0).setNumber(werewolves);
+        else{
+            updateMonster(x, y, werewolves);
+            updateArmy(x, y, vampires);
         }
     }
 
-    public Human getHumanBySquare(int x, int y){
-        for (Human human : this.humans){
-            if (human.getX()==x && human.getY()==y){
-                return human;
+    public void updateHuman(int x, int y, int humans){
+        int posHuman = getHumanBySquare(x,y);
+        if (posHuman>=0){
+            if (humans==0){
+                this.humans.remove(posHuman);
+            }
+            else{
+                this.humans.get(posHuman).setNumber(humans);
             }
         }
-        return null;
+        else if (posHuman ==-1 && humans>0){
+            this.humans.add(new Human(x , y, humans));
+        }
     }
 
-    public void updateHuman(){
+    public void updateMonster(int x, int y, int monsters){
+        int posMonster = getMonsterBySquare(x, y);
+        if (posMonster>=0){
+            if (monsters==0){
+                this.monsters.remove(posMonster);
+            }
+            else{
+                this.monsters.get(posMonster).setNumber(monsters);
+            }
+        }
+        else if (posMonster ==-1 && monsters>0){
+            this.monsters.add(new Monster(x , y, monsters));
+        }
+    }
+
+    public void updateArmy(int x, int y, int army){
+        int posArmy = getMonsterBySquare(x, y);
+        if (posArmy>=0){
+            if (army==0){
+                this.army.remove(posArmy);
+            }
+            else{
+                this.army.get(posArmy).setNumber(army);
+            }
+        }
+        else if (posArmy ==-1 && posArmy>0){
+            this.army.add(new Monster(x , y, army));
+        }
+    }
+
+    public int getHumanBySquare(int x, int y){
+        for (Human human : this.humans){
+            if (human.getX()==x && human.getY()==y){
+                return this.humans.indexOf(human);
+            }
+        }
+        return -1;
+    }
+
+    public int getMonsterBySquare(int x, int y){
+        for (Monster monster : this.monsters){
+            if (monster.getX()==x && monster.getY()==y){
+                return this.monsters.indexOf(monster);
+            }
+        }
+        return -1;
+    }
+
+    public int getArmyBySquare(int x, int y){
+        for (Monster monster : this.army){
+            if (monster.getX()==x && monster.getY()==y){
+                return this.army.indexOf(monster);
+            }
+        }
+        return -1;
     }
 
     public void addMonster(int x, int y){
