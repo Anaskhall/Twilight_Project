@@ -14,6 +14,12 @@ public class Human {
         this.y = y;
     }
 
+    public Human(int x, int y, int number) {
+        this.x = x;
+        this.y = y;
+        this.number = number;
+    }
+
     public int getX() {
         return x;
     }

@@ -14,6 +14,12 @@ public class Monster {
         this.y = y;
     }
 
+    public Monster(int x, int y, int number) {
+        this.x = x;
+        this.y = y;
+        this.number = number;
+    }
+
     public int getX() {
         return x;
     }
