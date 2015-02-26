@@ -91,7 +91,7 @@ public class Game {
             int vampires = (int) trame[5 * i +3] & 0xff;
             int werewolves = (int) trame[5 * i +4] & 0xff;
             System.out.println("MAP " + x + " " + y + " " + humans+ " " + vampires+ " " + werewolves);
-            //game_map.initialize(x, y, humans, vampires, werewolves);
+            game_map.initialize(x, y, humans, vampires, werewolves);
         }
     }
 
@@ -106,7 +106,7 @@ public class Game {
             int vampires = (int) trame[5 * i +3] & 0xff;
             int werewolves = (int) trame[5 * i +4] & 0xff;
             System.out.println("UPD " + x + " " + y + " " + humans+ " " + vampires+ " " + werewolves);
-           // game_map.update(x, y, humans, vampires, werewolves);
+            game_map.update(x, y, humans, vampires, werewolves);
         }
     }
 
@@ -154,7 +154,4 @@ public class Game {
         input.close();
         output.close();
     }
-
-
-
 }
