@@ -8,6 +8,7 @@ public class Monster {
     private int x;
     private int y;
     private int number;
+    private Move move;
 
     public Monster(int x, int y) {
         this.x = x;
@@ -18,6 +19,14 @@ public class Monster {
         this.x = x;
         this.y = y;
         this.number = number;
+    }
+
+    public Move getMove() {
+        return move;
+    }
+
+    public void setMove(Move move) {
+        this.move = move;
     }
 
     public int getX() {
