@@ -1,9 +1,11 @@
 import models.Map;
+import models.Move;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  * Created by Anas-kh on 26/02/2015.
@@ -17,9 +19,10 @@ public class Game {
     private static String host = "127.0.0.1";
     private static int port = 5555;
     private static String team = "Twilight";
-    int test = 0;
-
+    private Strategy strategy = new Strategy();
     private Map game_map;
+
+    int test = 0;
 
     public byte[] receiveTrame(int size) throws Exception {
         byte[] trame = new byte[size];
@@ -109,8 +112,16 @@ public class Game {
             System.out.println("UPD " + x + " " + y + " " + humans+ " " + vampires+ " " + werewolves);
             game_map.update(x, y, humans, vampires, werewolves);
         }
+        //ArrayList<Move> moves = strategy.chooseMoves(game_map);
+        Move move = new Move(4,3,2,5,4);
+        Move move2 = new Move(4,3,2,3,2);
+        ArrayList<Move> moves = new ArrayList<Move>();
+        moves.add(move);
+        moves.add(move2);
+
         if (test==0){
-            sendMOV();
+            System.out.println("Sending MOV");
+            sendMOV(moves);
             test++;
         }
 
@@ -134,23 +145,26 @@ public class Game {
         }
     }
 
-    public void sendMOV(){
-        byte[] trame = new byte[9];
+    public void sendMOV(ArrayList<Move> moves){
+        int size = moves.size();
+        byte[] trame = new byte[4+5*size];
         trame[0] = 'M';
         trame[1] = 'O';
         trame[2] = 'V';
-        trame[3] = (byte) 1;
+        trame[3] = (byte) size;
 
-        trame[4] = (byte) 4;
-        trame[5] = (byte) 3;
-        trame[6] = (byte) 2;
-        trame[7] = (byte) 5;
-        trame[8] = (byte) 4;
-
+        for (int i=0; i<size; i++){
+            Move move = moves.get(i);
+            trame[4+i]= (byte) move.getStartX();
+            trame[4+i+1]= (byte) move.getStartY();
+            trame[4+i+2]= (byte) move.getNumber();
+            trame[4+i+3]= (byte) move.getFinishX();
+            trame[4+i+4]= (byte) move.getFinishY();
+        }
         try {
             output.write(trame, 0, trame.length);
         } catch (IOException e) {
-            System.out.println("Cannot send NME");
+            System.out.println("Cannot send MOV");
         }
     }
 
