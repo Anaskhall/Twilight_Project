@@ -17,6 +17,7 @@ public class Game {
     private static String host = "127.0.0.1";
     private static int port = 5555;
     private static String team = "Twilight";
+    int test = 0;
 
     private Map game_map;
 
@@ -77,7 +78,7 @@ public class Game {
         int x = (int) trame[0] & 0xff;
         int y = (int) trame[1] & 0xff;
         System.out.println("HME " + x + "   " + y);
-        game_map.addArmy(x,y);
+        game_map.addArmy(x, y);
     }
 
     private void processTrameMAP() throws Exception {
@@ -108,23 +109,14 @@ public class Game {
             System.out.println("UPD " + x + " " + y + " " + humans+ " " + vampires+ " " + werewolves);
             game_map.update(x, y, humans, vampires, werewolves);
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-
-        System.out.println("Establishing connection");
-        try {
-            socket = new Socket(host, port);
-            input = socket.getInputStream();
-            output = socket.getOutputStream();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Closing Program");
-            return;
+        if (test==0){
+            sendMOV();
+            test++;
         }
 
-        System.out.println("Connexion established");
+    }
 
+    public void sendNME(){
         int size = team.length();
         byte[] trame = new byte[4+size];
 
@@ -140,9 +132,47 @@ public class Game {
         } catch (IOException e) {
             System.out.println("Cannot send NME");
         }
+    }
 
-        System.out.println("NME sent");
+    public void sendMOV(){
+        byte[] trame = new byte[9];
+        trame[0] = 'M';
+        trame[1] = 'O';
+        trame[2] = 'V';
+        trame[3] = (byte) 1;
+
+        trame[4] = (byte) 4;
+        trame[5] = (byte) 3;
+        trame[6] = (byte) 2;
+        trame[7] = (byte) 5;
+        trame[8] = (byte) 4;
+
+        try {
+            output.write(trame, 0, trame.length);
+        } catch (IOException e) {
+            System.out.println("Cannot send NME");
+        }
+    }
+
+
+    public static void main(String[] args) throws Exception {
+
         Game game = new Game();
+        System.out.println("Establishing connection");
+        try {
+            socket = new Socket(host, port);
+            input = socket.getInputStream();
+            output = socket.getOutputStream();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Closing Program");
+            return;
+        }
+        System.out.println("Connexion established");
+
+        game.sendNME();
+        System.out.println("NME sent");
+
         while (true){
             boolean isClosing = game.receiveData();
             if (isClosing){
